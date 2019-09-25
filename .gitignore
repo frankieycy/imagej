@@ -1,0 +1,8 @@
+bak/
+img/
+
+.DS_Store
+*.csv
+*.tif
+*.gif
+
