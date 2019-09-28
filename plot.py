@@ -5,24 +5,22 @@ from matplotlib import rc
 
 rc('text', usetex=True)
 
-# ----------- #
+# ----------------------------------------- #
 
 '''
 Note:
 	- PHYS3710 Short Experimental Project - Analysis Codes
-	- Last update: 15/9/2019
-	- outputs (images) written to ./img
+	- Last: 29/9/2019
+	- outputs (images) written to img/ (prepare this!)
 	- generate distributions for different tau's
-	- variance relates linearly with tau -> Avogadro constant
-	- still need: temperature, radius
+	- variance (diffusion spread) relates linearly with tau -> Avogadro constant
+
 Measurements:
 	- temperature: 25 deg
-	- radius: 1.04 mu m
-Bug:
-	- \mu italic
+	- diameter: 1.04 micron
 '''
 
-# ----------- #
+# ----------------------------------------- #
 
 out = 'img/' # location of outputs
 
@@ -31,9 +29,7 @@ old = glob.glob(out+"*.png")
 for f in old:
 	os.remove(f)
 
-# ----------- #
-
-# distributions in time
+# ---------- distributions in time ---------- #
 
 px_to_μm = 200/1051 # scale: pixel to μm
 to_sec = 5 # scale: time in second
@@ -41,30 +37,32 @@ to_sec = 5 # scale: time in second
 tau = range(1,50,1)
 
 extension = 'csv'
-files = glob.glob('*.{}'.format(extension))
+files = glob.glob('*.{}'.format(extension)) # get all .csv files
 
-delta_x2_arr = []
+delta_x2_arr = [] # stores variance for diff tau
 
 for dt in tau:
-	delta_x = []
-	delta_y = []
+	delta_x = [] # x-displacement
+	delta_y = [] # y-diaplacement
 
-	# read data from files
+	# ---------- read data from files ---------- #
+
 	for f in files:
 		data = np.loadtxt(f,delimiter=",",skiprows=1)
-		T = len(data)
-		t = data[:,2] # unit: 5s
-		x = data[:,3] # unit: pixel
-		y = data[:,4]
+		T = len(data) # total time
+		t = data[:,2] # time; unit: 5s
+		x = data[:,3] # x-coord; unit: pixel
+		y = data[:,4] # y-coord
 
 		for Δ in range(0,30): # trick
 			for t in range(dt+Δ,T,dt):
 				delta_x.append((x[t]-x[t-dt])*px_to_μm)
 				delta_y.append((y[t]-y[t-dt])*px_to_μm)
 
-	delta_x.extend(delta_y)
+	delta_x.extend(delta_y) # gather displacements in x,y-dim
 
-	# plot histogram: Gaussian with spread ~dt
+	# ---------- plot histogram: Gaussian with spread ~dt ---------- #
+
 	fig = plt.figure()
 	axes = plt.gca()
 	axes.set_xlim([-10,10])
@@ -79,21 +77,21 @@ for dt in tau:
 	fig.savefig(out+'plot_{}.png'.format(dt),dpi=200)
 	plt.close()
 
-	# ----------- #
+	# ----------------------------------------- #
 
 	delta_x = np.array(delta_x)
 	mean_x = np.mean(delta_x) # mean displacement
-	delta_x2 = np.mean(delta_x**2) # mean squared displacement
-	delta_x2_arr.append(delta_x2)
+	delta_x2 = np.mean(delta_x**2) # mean squared displacement (variance)
+	delta_x2_arr.append(delta_x2) # stores delta_x2
 
-	# statistics
+	# ---------- statistics ---------- #
+
 	print("--- dt={} ---".format(dt))
 	print("<delta_x> = {}".format(round(mean_x,4))) # ~0
 	print("<delta_x^2> = {}".format(round(delta_x2,4))) # ~dt
 
-# ----------- #
+# ---------- Einstein's diffusion relation ---------- #
 
-# Einstein's diffusion relation
 tau = to_sec*np.array(tau)
 x = np.linspace(0,max(tau),2)
 m,b = np.polyfit(tau,delta_x2_arr,deg=1) # line fit
@@ -112,7 +110,7 @@ plt.legend()
 fig.savefig(out+'x2tau.png'.format(dt),dpi=200)
 plt.close()
 
-# ----------- #
+# ----------------------------------------- #
 
 print("--- analysis ---")
 print("slope = {}".format(round(m,10)))
