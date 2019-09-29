@@ -17,4 +17,6 @@
 * snapshots of displacement distributions
 * a plot of squared displacement (diffusion spread) against time
 * collected in `img/`
+* a .csv file containing squared displacement against time
+
 

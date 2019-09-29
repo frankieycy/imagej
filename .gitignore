@@ -6,3 +6,5 @@ img/
 *.tif
 *.gif
 
+!data.csv
+!x2tau.csv

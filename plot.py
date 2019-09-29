@@ -37,7 +37,7 @@ to_sec = 5 # scale: time in second
 tau = range(1,50,1)
 
 extension = 'csv'
-files = glob.glob('*.{}'.format(extension)) # get all .csv files
+files = glob.glob('data*.{}'.format(extension)) # get all .csv files
 
 delta_x2_arr = [] # stores variance for diff tau
 
@@ -54,10 +54,9 @@ for dt in tau:
 		x = data[:,3] # x-coord; unit: pixel
 		y = data[:,4] # y-coord
 
-		for Δ in range(0,30): # trick
-			for t in range(dt+Δ,T,dt):
-				delta_x.append((x[t]-x[t-dt])*px_to_μm)
-				delta_y.append((y[t]-y[t-dt])*px_to_μm)
+		for t in range(dt,T): # compute displacements
+			delta_x.append((x[t]-x[t-dt])*px_to_μm)
+			delta_y.append((y[t]-y[t-dt])*px_to_μm)
 
 	delta_x.extend(delta_y) # gather displacements in x,y-dim
 
@@ -115,4 +114,11 @@ plt.close()
 print("--- analysis ---")
 print("slope = {}".format(round(m,10)))
 
+# ----------------------------------------- #
+
+f = open("x2tau.csv","w+") # print tau,var to file
+f.write('tau,var\n')
+for i in range(len(tau)):
+	f.write('{},{}\n'.format(tau[i],delta_x2_arr[i]))
+f.close()
 
