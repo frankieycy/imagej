@@ -1,7 +1,7 @@
 ## Brownian Motion
 
 * PHYS3710 Experimental Project: Analysis
-* Last: 28/9/2019
+* Last: 3/10/2019
 
 ## Goals
 

@@ -1,3 +1,4 @@
+raw/
 bak/
 img/
 
@@ -5,6 +6,8 @@ img/
 *.csv
 *.tif
 *.gif
+*.sh
+*.log
 
-!data.csv
+!data_sample.csv
 !x2tau.csv

@@ -10,13 +10,13 @@ rc('text', usetex=True)
 '''
 Note:
 	- PHYS3710 Short Experimental Project - Analysis Codes
-	- Last: 29/9/2019
+	- Last: 3/10/2019
 	- outputs (images) written to img/ (prepare this!)
 	- generate distributions for different tau's
 	- variance (diffusion spread) relates linearly with tau -> Avogadro constant
 
 Measurements:
-	- temperature: 25 deg
+	- temperature: 22.5 deg
 	- diameter: 1.04 micron
 '''
 
@@ -50,9 +50,9 @@ for dt in tau:
 	for f in files:
 		data = np.loadtxt(f,delimiter=",",skiprows=1)
 		T = len(data) # total time
-		t = data[:,2] # time; unit: 5s
-		x = data[:,3] # x-coord; unit: pixel
-		y = data[:,4] # y-coord
+		t = data[:,0] # time; unit: 5s
+		x = data[:,1] # x-coord; unit: pixel
+		y = data[:,2] # y-coord
 
 		for t in range(dt,T): # compute displacements
 			delta_x.append((x[t]-x[t-dt])*px_to_μm)
@@ -98,7 +98,7 @@ m,b = np.polyfit(tau,delta_x2_arr,deg=1) # line fit
 fig = plt.figure()
 axes = plt.gca()
 axes.set_xlim([0,max(tau)])
-plt.plot(tau,delta_x2_arr,color='black',
+plt.plot(tau,delta_x2_arr,linestyle='-',marker='.',color='black',
 	label="experimental") # ~linear
 plt.plot(x,b+m*x,'--',color='grey',
 	label="y={}+{}x (fitted)".format(round(b,4),round(m,4)))
