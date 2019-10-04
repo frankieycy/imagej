@@ -19,4 +19,9 @@
 * collected in `img/`
 * a .csv file containing squared displacement against time
 
+## Result
+
+* the solution to the diffusion equation **experimentally** recovered!
+
+![](plot_ani.gif)
 

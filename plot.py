@@ -65,7 +65,7 @@ for dt in tau:
 	fig = plt.figure()
 	axes = plt.gca()
 	axes.set_xlim([-10,10])
-	axes.set_ylim([0,1])
+	axes.set_ylim([0,0.4])
 	plt.hist(delta_x,color='black',bins=35,density=True,
 		range=[-10,10],label=r"$\tau$={}s".format(to_sec*dt))
 	plt.title(r"Distribution of displacement $\Delta x$")
